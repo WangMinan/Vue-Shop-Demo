@@ -5,14 +5,14 @@
         <img src = "@/assets/logo.png" >
       </div>
 <!--      label-width用于左右对齐-->
-      <el-form label-width="0px" class = "login-form">
+      <el-form :model="loginForm" label-width="0px" class = "login-form">
 <!--        用户名-->
         <el-form-item>
-          <el-input prefix-icon= "el-icon-user"></el-input>
+          <el-input v-model="loginForm.username" prefix-icon= "el-icon-user" ></el-input>
         </el-form-item>
 <!--        密码-->
         <el-form-item>
-          <el-input prefix-icon="el-icon-lock"></el-input>
+          <el-input v-model="loginForm.password" type="password" prefix-icon="el-icon-lock" show-password></el-input>
         </el-form-item>
         <el-form-item class = "buttons">
 <!--          登录-->
@@ -27,7 +27,15 @@
 
 <script>
 const options = {
-
+  data () {
+    return {
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      flag: false
+    }
+  }
 }
 export default options
 </script>

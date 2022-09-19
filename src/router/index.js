@@ -11,11 +11,35 @@ const routes = [
   {
     path: '/login',
     component: () => import('@/components/Login')
+  },
+  {
+    path: '/home',
+    component: () => import('@/components/Home')
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+
+// 挂载路由导航守卫
+router.beforeEach((to, from, next) => {
+  // to 将要访问的路径
+  // from 从哪个路径跳转而来
+  // next 是一个函数，表示放行 next('/login') 强制跳转至login页面
+  if (to.path === '/login') {
+    // 访问登录页面则直接放行
+    return next()
+  } else {
+    // 获取token并进行判断是否放行
+    const tokenStr = window.sessionStorage.getItem('token')
+    if (!tokenStr) {
+      // 无token则强制跳转至login页面
+      return next('/login')
+    } else {
+      return next()
+    }
+  }
 })
 
 export default router

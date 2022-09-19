@@ -7,7 +7,11 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // 全局css
 import '@/assets/css/global.css'
+import axios from 'axios'
 
+axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+Vue.prototype.$http = axios // 将axios挂载到vue的原型对象上
+Vue.prototype.$message = ElementUI.Message // 将message挂载到vue的原型对象上
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 

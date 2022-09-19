@@ -8,8 +8,13 @@
 const options = {
   methods: {
     logout () {
-      window.sessionStorage.clear()
-      this.$router.push('/login')
+      try {
+        window.sessionStorage.clear()
+        this.$router.push('/login')
+        this.$message.success('退出成功')
+      } catch (e) {
+        this.$message.error('退出失败，请检查网络环境')
+      }
     }
   }
 }

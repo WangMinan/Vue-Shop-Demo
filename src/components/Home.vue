@@ -12,8 +12,29 @@
 <!--      页面主题区域-->
       <el-container>
 <!--        侧边栏-->
-        <el-aside width="200px">Aside</el-aside>
-<!--        主区域-->
+        <el-aside width="200px">
+<!--          每次只允许展开一个一级菜单的二级菜单-->
+          <el-menu :unique-opened = true>
+<!--            一级菜单-->
+<!--            index值相同时会同时展开收起-->
+            <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
+<!--              一级菜单模板区-->
+              <template slot="title">
+                <i :class="iconsList[item.id]"></i>
+                <span>{{item.authName}}</span>
+              </template>
+<!--              二级菜单-->
+              <el-menu-item :index="subItem.id + ''" v-for="subItem in item.children" :key="subItem.id">
+<!--                二级菜单模板-->
+                <template slot="title">
+                  <i class="el-icon-cloudy"></i>
+                  <span>{{subItem.authName}}</span>
+                </template>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-aside>
+<!--       主区域-->
         <el-main>Main</el-main>
       </el-container>
     </el-container>
@@ -21,7 +42,25 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 const options = {
+  created () {
+    this.getMenuList()
+  },
+  data () {
+    return {
+      // 左侧菜单数据
+      menuList: [],
+      iconsList: {
+        125: 'el-icon-s-custom',
+        103: 'el-icon-menu',
+        101: 'el-icon-s-goods',
+        102: 'el-icon-s-order',
+        145: 'el-icon-s-data'
+      }
+    }
+  },
   methods: {
     logout () {
       try {
@@ -30,6 +69,19 @@ const options = {
         this.$message.success('退出成功')
       } catch (e) {
         this.$message.error('退出失败，请检查网络环境')
+      }
+    },
+    // 获取菜单列表
+    async getMenuList () {
+      try {
+        const resp = await axios.get('menus')
+        if (resp.data.meta.status !== 200) {
+          this.$message.error('resp.data.meta.msg')
+        } else {
+          this.menuList = resp.data.data
+        }
+      } catch (e) {
+        this.$message.error('获取菜单列表失败，请检查网络环境')
       }
     }
   }
@@ -65,6 +117,6 @@ export default options
   }
 }
 .el-aside{
-  background-color: rgb(193,210,240);
+  background-color: white;
 }
 </style>

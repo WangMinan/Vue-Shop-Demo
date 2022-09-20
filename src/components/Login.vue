@@ -27,6 +27,8 @@
 
 <script>
 
+import axios from 'axios'
+
 const options = {
   data () {
     return {
@@ -56,7 +58,7 @@ const options = {
             this.$message.error('登陆失败，请检查输入的内容与格式是否正确')
           } else {
             try {
-              const resp = await this.$http.post('login', this.loginForm)
+              const resp = await axios.post('login', this.loginForm)
               if (resp.data.meta.status === 200) {
                 this.$message.success('登陆成功')
                 // 1. 保存token至客户端的sessionStorage中

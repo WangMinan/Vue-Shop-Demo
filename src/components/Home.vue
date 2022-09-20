@@ -12,9 +12,11 @@
 <!--      页面主题区域-->
       <el-container>
 <!--        侧边栏-->
-        <el-aside width="200px">
+        <el-aside :width="isCollapse ? '64px' : '200px'">
+<!--          <div class="toggle-button" @click="toggleCollapse">|||</div>-->
+          <el-button class="toggle-button" @click="toggleCollapse">|||</el-button>
 <!--          每次只允许展开一个一级菜单的二级菜单-->
-          <el-menu :unique-opened = true>
+          <el-menu :unique-opened = true :collapse="isCollapse" :collapse-transition="false">
 <!--            一级菜单-->
 <!--            index值相同时会同时展开收起-->
             <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
@@ -58,7 +60,8 @@ const options = {
         101: 'el-icon-s-goods',
         102: 'el-icon-s-order',
         145: 'el-icon-s-data'
-      }
+      },
+      isCollapse: false
     }
   },
   methods: {
@@ -83,6 +86,9 @@ const options = {
       } catch (e) {
         this.$message.error('获取菜单列表失败，请检查网络环境')
       }
+    },
+    toggleCollapse () {
+      this.isCollapse = !this.isCollapse
     }
   }
 }
@@ -96,6 +102,7 @@ export default options
 .home-container{
   height: 100%;
 }
+
 .el-header{
   background-color: rgb(64,158,255);
   display: flex;
@@ -116,7 +123,17 @@ export default options
     }
   }
 }
+
 .el-aside{
   background-color: white;
+}
+
+.toggle-button{
+  //如何使用CSS自己撰写一个按钮
+  //background-color: rgb(193,210,240);
+  //text-align: center;
+  letter-spacing: 0.2em;
+  //cursor: pointer;
+  width: 100%;
 }
 </style>

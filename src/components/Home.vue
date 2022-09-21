@@ -14,9 +14,10 @@
 <!--        侧边栏-->
         <el-aside :width="isCollapse ? '64px' : '200px'">
 <!--          <div class="toggle-button" @click="toggleCollapse">|||</div>-->
-          <el-button class="toggle-button" @click="toggleCollapse">|||</el-button>
-<!--          每次只允许展开一个一级菜单的二级菜单-->
-          <el-menu :unique-opened = true :collapse="isCollapse" :collapse-transition="false">
+          <el-button ref="btn1" class="toggle-button" @click="toggleCollapse">{{buttonChars}}</el-button>
+<!--          unique每次只允许展开一个一级菜单的二级菜单-->
+<!--          router允许在点击菜单项时跳转至prefix+/页面index所在位置-->
+          <el-menu :unique-opened = true :collapse="isCollapse" :collapse-transition="false" :router="true">
 <!--            一级菜单-->
 <!--            index值相同时会同时展开收起-->
             <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
@@ -26,7 +27,7 @@
                 <span>{{item.authName}}</span>
               </template>
 <!--              二级菜单-->
-              <el-menu-item :index="subItem.id + ''" v-for="subItem in item.children" :key="subItem.id">
+              <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
 <!--                二级菜单模板-->
                 <template slot="title">
                   <i class="el-icon-cloudy"></i>
@@ -37,7 +38,9 @@
           </el-menu>
         </el-aside>
 <!--       主区域-->
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -61,7 +64,8 @@ const options = {
         102: 'el-icon-s-order',
         145: 'el-icon-s-data'
       },
-      isCollapse: false
+      isCollapse: false,
+      buttonChars: '<<<'
     }
   },
   methods: {
@@ -89,6 +93,7 @@ const options = {
     },
     toggleCollapse () {
       this.isCollapse = !this.isCollapse
+      this.buttonChars = this.isCollapse ? '>>>' : '<<<'
     }
   }
 }
@@ -132,7 +137,7 @@ export default options
   //如何使用CSS自己撰写一个按钮
   //background-color: rgb(193,210,240);
   //text-align: center;
-  letter-spacing: 0.2em;
+  //letter-spacing: 0.2em;
   //cursor: pointer;
   width: 100%;
 }

@@ -14,7 +14,14 @@ const routes = [
   },
   {
     path: '/home',
-    component: () => import('@/components/Home')
+    component: () => import('@/components/Home'),
+    redirect: '/welcome',
+    children: [
+      {
+        path: '/welcome',
+        component: () => import('@/components/Welcome')
+      }
+    ]
   }
 ]
 

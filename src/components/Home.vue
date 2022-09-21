@@ -17,7 +17,14 @@
           <el-button ref="btn1" class="toggle-button" @click="toggleCollapse">{{buttonChars}}</el-button>
 <!--          unique每次只允许展开一个一级菜单的二级菜单-->
 <!--          router允许在点击菜单项时跳转至prefix+/页面index所在位置-->
-          <el-menu :unique-opened = true :collapse="isCollapse" :collapse-transition="false" :router="true">
+<!--          activePath高亮激活-->
+          <el-menu
+            :unique-opened = true
+            :collapse="isCollapse"
+            :collapse-transition="false"
+            :router="true"
+            :default-active="activePath"
+          >
 <!--            一级菜单-->
 <!--            index值相同时会同时展开收起-->
             <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
@@ -27,7 +34,12 @@
                 <span>{{item.authName}}</span>
               </template>
 <!--              二级菜单-->
-              <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
+              <el-menu-item
+                :index="'/' + subItem.path"
+                v-for="subItem in item.children"
+                :key="subItem.id"
+                @click="saveNavState('/' + subItem.path)"
+              >
 <!--                二级菜单模板-->
                 <template slot="title">
                   <i class="el-icon-cloudy"></i>
@@ -52,6 +64,7 @@ import axios from 'axios'
 const options = {
   created () {
     this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   data () {
     return {
@@ -65,7 +78,9 @@ const options = {
         145: 'el-icon-s-data'
       },
       isCollapse: false,
-      buttonChars: '<<<'
+      buttonChars: '<<<',
+      // 被激活的链接地址
+      activePath: ''
     }
   },
   methods: {
@@ -94,6 +109,11 @@ const options = {
     toggleCollapse () {
       this.isCollapse = !this.isCollapse
       this.buttonChars = this.isCollapse ? '>>>' : '<<<'
+    },
+    saveNavState (activePath) {
+      // 保存链接的激活状态
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     }
   }
 }

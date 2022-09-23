@@ -16,6 +16,7 @@ axios.interceptors.request.use(config => {
 })
 // Vue.prototype.$http = axios // 将axios挂载到vue的原型对象上
 Vue.prototype.$message = ElementUI.Message // 将message挂载到vue的原型对象上
+Vue.prototype.$confirm = ElementUI.MessageBox.confirm // 将confirm挂载到vue的原型对象上
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 

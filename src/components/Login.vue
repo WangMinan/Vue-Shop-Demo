@@ -30,6 +30,15 @@
 import axios from 'axios'
 
 const options = {
+  mounted () {
+    document.onkeydown = e => {
+      if (e.keyCode === 13 && e.target.baseURI.match('/login')) {
+        // match(此处应填写文件在浏览器中的地址，如 '/home/index')，不写的话，其他页面也会有调用回车按下的方法
+        // console.log('enter')
+        this.login() // 调用查询方法
+      }
+    }
+  },
   data () {
     return {
       loginForm: {

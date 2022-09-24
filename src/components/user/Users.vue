@@ -44,8 +44,8 @@
               <el-button type="danger" icon="el-icon-delete" circle size="small" @click="removeUserById(scope.row.id)"></el-button>
             </el-tooltip>
 <!--            分配角色按钮-->
-            <el-tooltip effect="light" content="修改权限" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" circle size="small"></el-button>
+            <el-tooltip effect="light" content="分配角色" placement="top" :enterable="false">
+              <el-button type="warning" icon="el-icon-setting" circle size="small" @click="setRole(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -111,6 +111,31 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="editUserInfo">确定</el-button>
         <el-button @click="editUserDialogVisible = false">取消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setRoleDialogVisible"
+      width="50%"
+    >
+      <span>
+        <p>当前用户: {{userInfo.username}}</p>
+        <p>用户角色: {{userInfo.role_name}}</p>
+        <p>
+          请选择新角色:
+          <el-select v-model="selectedRoleId" placeholder="请选择">
+            <el-option
+              v-for="item in rolesList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -193,7 +218,11 @@ const options = {
           { required: true, message: '请输入手机号', trigger: 'blur' }, // 鼠标失去焦点时触发该检查
           { validator: checkMobile, trigger: 'blur' }
         ]
-      }
+      },
+      setRoleDialogVisible: false,
+      userInfo: '',
+      rolesList: [],
+      selectedRoleId: ''
     }
   },
   methods: {
@@ -336,6 +365,40 @@ const options = {
         } catch (e) {
           this.$message.error('删除用户信息失败,请检查后端服务器状态')
         }
+      }
+    },
+    async setRole (userInfo) {
+      this.userInfo = userInfo
+      // 在展示对话框之前, 先获取角色列表
+      try {
+        const resp = await axios.get('roles')
+        if (resp.data.meta.status !== 200) {
+          this.$message.error(resp.data.meta.message)
+        } else {
+          this.rolesList = resp.data.data
+        }
+      } catch (e) {
+        this.$message.error('获取角色列表失败,请检查后端服务器')
+      }
+      this.setRoleDialogVisible = true
+    },
+    async saveRoleInfo () {
+      if (this.selectedRoleId === '') {
+        return this.$message.error('请选择角色')
+      }
+      try {
+        const resp = await axios.put(`users/${this.userInfo.id}/role`, {
+          rid: this.selectedRoleId
+        })
+        if (resp.data.meta.status !== 200) {
+          this.$message.error(resp.data.meta.message)
+        } else {
+          this.$message.success('分配角色成功')
+          this.setRoleDialogVisible = false
+          await this.getUserList()
+        }
+      } catch (e) {
+        this.$message.error('分配角色失败,请检查后端服务器')
       }
     }
   }

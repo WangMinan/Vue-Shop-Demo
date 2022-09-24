@@ -25,6 +25,14 @@ const routes = [
         // users不是welcome的子路由 是home的子路由
         path: '/users',
         component: () => import('@/components/user/Users')
+      },
+      {
+        path: '/rights',
+        component: () => import('@/components/power/Rights')
+      },
+      {
+        path: '/roles',
+        component: () => import('@/components/power/Roles')
       }
     ]
   }

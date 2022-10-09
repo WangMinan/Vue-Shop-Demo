@@ -37,7 +37,7 @@ const options = {
       rules: {
         username: [
           // 验证密码是否合法
-          { required: true, message: '请输入活动名称', trigger: 'blur' }, // 鼠标失去焦点时触发该检查
+          { required: true, message: '请输入名称', trigger: 'blur' }, // 鼠标失去焦点时触发该检查
           { min: 3, max: 30, message: '长度应当为 3 到 30 个字符', trigger: 'blur' }
         ],
         password: [

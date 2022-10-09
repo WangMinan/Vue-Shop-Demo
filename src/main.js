@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 全局css
 import '@/assets/css/global.css'
 import axios from 'axios'
+import TreeTable from 'vue-table-with-tree-grid'
 
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 axios.interceptors.request.use(config => {
@@ -19,6 +20,8 @@ Vue.prototype.$message = ElementUI.Message // 将message挂载到vue的原型对
 Vue.prototype.$confirm = ElementUI.MessageBox.confirm // 将confirm挂载到vue的原型对象上
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+// 全局组件
+Vue.component('tree-table', TreeTable)
 
 new Vue({
   router,

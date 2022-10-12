@@ -9,12 +9,21 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/global.css'
 import axios from 'axios'
 import TreeTable from 'vue-table-with-tree-grid'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 axios.interceptors.request.use(config => {
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config // 必须return config 固定写法
 })
+// 添加响应拦截器
+axios.interceptors.response.use(config => {
+  NProgress.done()
+  return config
+})
+
 // Vue.prototype.$http = axios // 将axios挂载到vue的原型对象上
 Vue.prototype.$message = ElementUI.Message // 将message挂载到vue的原型对象上
 Vue.prototype.$confirm = ElementUI.MessageBox.confirm // 将confirm挂载到vue的原型对象上
